@@ -1,0 +1,119 @@
+* About
+Emacs configuration in [[http://orgmode.org][org-mode]].
+
+* How does this work?
+The following lines in my =~/.emacs.d/init.el= generates another =.el= file, which is then loaded by the Emacs daemon on startup.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'org)
+(org-babel-load-file
+  (expand-file-name "emacs.org"
+                    user-emacs-directory))
+#+END_SRC
+
+* Configuration
+** General
+*** Personal information
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Berk Ozbalci"
+      user-mail-address "berkozbalci@gmail.com")
+#+END_SRC
+
+*** Use y/n instead of yes/no
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+*** Discard customizations
+#+BEGIN_SRC emacs-lisp
+(setq custom-file (make-temp-file ""))
+#+END_SRC
+
+*** Set explicit shell binary
+#+BEGIN_SRC emacs-lisp
+(setq explicit-shell-file-name "/usr/bin/fish")
+#+END_SRC
+
+** Evil mode
+*** Enable evil-mode
+#+BEGIN_SRC emacs-lisp
+(require 'evil)
+(evil-mode 1)
+#+END_SRC
+
+*** jj to evil-normal-state
+#+BEGIN_SRC emacs-lisp
+(setq key-chord-two-keys-delay 0.5)
+(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+(key-chord-mode 1)
+#+END_SRC
+
+** Appearance and font
+*** Set the font
+#+BEGIN_SRC emacs-lisp
+(set-default-font "Inziu Iosevka J 13")
+#+END_SRC
+
+*** Load the font on graphical frame start
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist '(font . "Inziu Iosevka J 13"))
+#+END_SRC
+
+*** Remove scroll bar on graphical frame start
+#+BEGIN_SRC emacs-lisp
+(toggle-scroll-bar -1)
+
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizonal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
+#+END_SRC
+
+*** Remove other bars
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+#+END_SRC
+
+*** Theme
+#+BEGIN_SRC emacs-lisp
+(load-theme 'leuven t)
+#+END_SRC
+
+** Indentation and other enhancements
+*** Indentation
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq tab-width 4)
+#+END_SRC
+
+*** Automatically enter matching parens
+#+BEGIN_SRC emacs-lisp
+(electric-pair-mode 1)
+#+END_SRC
+
+** Language specific
+*** C/C++
+#+BEGIN_SRC emacs-lisp
+(setq-default c-default-style "python"
+              c-basic-offset 4)
+(add-hook 'c-mode-hook (lambda () (interactive) (column-marker-1 80)))
+#+END_SRC
+
+** Org
+*** Keybinds
+#+BEGIN_SRC emacs-lisp
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-iswitchb)
+#+END_SRC
+
+** IPython Shell
+*** Set Python shell interpreter
+#+BEGIN_SRC emacs-lisp
+(require 'python)
+(setq python-shell-interpreter "ipython")
+#+END_SRC
+
