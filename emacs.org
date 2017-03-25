@@ -41,6 +41,13 @@ The following lines in my =~/.emacs.d/init.el= generates another =.el= file, whi
 (evil-mode 1)
 #+END_SRC
 
+*** evil-snipe
+#+BEGIN_SRC emacs-lisp
+(require 'evil-snipe)
+(evil-snipe-mode 1)
+
+#+END_SRC
+
 *** jj to evil-normal-state
 #+BEGIN_SRC emacs-lisp
 (setq key-chord-two-keys-delay 0.5)
